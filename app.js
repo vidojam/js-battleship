@@ -71,13 +71,15 @@ function addShipPiece(ship) {
     letValidStart = isHorizontal ? randomStartIndex <=  width * width - ship.length ? randomStartIndex: 
     width * width - ship.length 
 
+    randomStartIndex <= width * width - ship.length * width ? randomStartIndex: randomStartIndex - ship.length * width + width;
+
     let shipBlocks = [];
 
     for (let i = 0; i < ship; i++ {
         if (isHorizontal) {
-            shipBlocks.push(allBoardBlocks[Number(randomStartIndex)+ 1]);    
+            shipBlocks.push(allBoardBlocks[Number(validStart) + 1]);    
         } else {
-            shipBlocks.push(allBoardBlocks[Number(randomStartIndex) + i + width]);
+            shipBlocks.push(allBoardBlocks[Number(validStart) + i + width]);
         }
     }
 
