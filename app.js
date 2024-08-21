@@ -83,20 +83,39 @@ function addShipPiece(ship) {
         }
     }
 
+    let valid = true
+
     if (isHorizontal) {
         shipBlocks.every((_shipBlock, index) =>
-            shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
+            valid = shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
     } else {
-        shipBlocks.every((_shipBlock, index) =>
-            shipBlocks[0].id < 90 + (width * index + 1)
+            valid =  shipBlocks.every((_shipBlock, index) =>
+                 shipBlocks[0].id < 90 + (width * index + 1)
             )
     }
 
+    const notTaken = shipBlocks.every(shipBlock => !shipBlock.classList.contains('taken'));
 
-    shipBlocks.forEach(shipBlock => {
-        shipBlock.classList.add('ship.name');
-        shipBlock.classList.add('taken');
-    })
+    if (valid & notTaken) {
+        shipBlocks.forEach(shipBlock => {
+            shipBlock.classList.add('ship.name');
+            shipBlock.classList.add('taken');
+        })
+    } else {
+        addShipPiece(ship);
+    }
+    
 
 ships.forEach(ship => addShipPiece(ship));
+
+
+let draggedShip;
+const optionShips = Array.from(optionContainer.children);
+optionShips.forEach(optionShip => optionship.addEventListener('dragstart', dragStart));
+
+const allPlayerBlocks = document.querySelectorAll('#player div'));
+
+function dragStart(e) {
+    draggedShip = (e.target);
+}
 
