@@ -1,49 +1,37 @@
 const gamesBoardContainer = document.querySelector('#gamesBoard-container');
-
 const optionContainer = document.querySelector('.option-container');
+const flipButton = document.querySelector('#flip-button'); // Ensure this button exists in HTML
 
-const flipButton = document.querySelector('#flip-button'); // check the whole document for the button
-
-
-let angle = 0; 
+let angle = 0;
 
 function flip() {
-    const optionShips = (Array.from(optionContainer.children)); // log the children of the option container
-        if (angle === 0) {
-          angle = 90; 
-          
-        } else {
-            angle = 0;
-     } 
-
-        optionShips.forEach(optionShip => optionShip.style.transform = `rotate(${angle}deg)`); // backticks to be able to change the angle in the future. Brackets are used to insert the angle variable
+    const optionShips = Array.from(optionContainer.children); // Get the children of the option container
+    angle = angle === 0 ? 90 : 0; // Rotate angle
+    optionShips.forEach(optionShip => optionShip.style.transform = `rotate(${angle}deg)`); // Rotate each ship
 }
 
-flipButton.addEventListener('click', flip); // add an event listener to the button
+flipButton.addEventListener('click', flip); // Add event listener to the button
 
-
-const width = 10; // set the width of the board to 10
-
+const width = 10; // Set the width of the board to 10
 
 function createBoard(color, user) {
-    const gameBoardContainer = document.createElement('div'); // create a div element
-    gameBoardContainer.classList.add('game-board'); // add a class to the div element    
-    gameBoardContainer.style.backgroundColor = color; 
-    gameBoardContainer.id = user;
+    const gameBoardContainer = document.createElement('div'); // Create a div element
+    gameBoardContainer.classList.add('game-board'); // Add a class to the div element
+    gameBoardContainer.style.backgroundColor = color; // Set background color
+    gameBoardContainer.id = user; // Set ID
 
-    for (let i=0; i < width * width; i++) {
+    for (let i = 0; i < width * width; i++) {
         const block = document.createElement('div');
         block.classList.add('block');
         block.id = i;
         gameBoardContainer.append(block);
-    
+    }
 
-    gamesBoardContainer.append(gameBoardContainer);
-}  
+    gamesBoardContainer.append(gameBoardContainer); // Append the new board to the container
+}
 
-createBoard('yellow','user'); 
-createBoard('pink', 'computer'); // call the function to create the board
-
+createBoard('yellow', 'user'); 
+createBoard('pink', 'computer'); // Call the function to create the boards
 
 class Ship {
     constructor(name, length) {
@@ -62,60 +50,77 @@ const carrier = new Ship('carrier', 5);
 
 const ships = [destroyer, submarine, cruiser, battleship, carrier];
 
-function addShipPiece(ship) {
+function addShipPiece(ship, startId) {
     const allBoardBlocks = document.querySelectorAll('#computer div');
     let randomBoolean = Math.random() < 0.5;
     let isHorizontal = randomBoolean;
-    let randomStartIndex = Math.floor(Math.random) * width * width);
+    let randomStartIndex = Math.floor(Math.random() * width * width);
     
-    letValidStart = isHorizontal ? randomStartIndex <=  width * width - ship.length ? randomStartIndex: 
-    width * width - ship.length 
-
-    randomStartIndex <= width * width - ship.length * width ? randomStartIndex: randomStartIndex - ship.length * width + width;
+    let validStart = isHorizontal ? 
+        (randomStartIndex <= width * width - ship.length ? randomStartIndex : width * width - ship.length) :
+        (randomStartIndex <= width * width - ship.length * width ? randomStartIndex : randomStartIndex - ship.length * width + width);
 
     let shipBlocks = [];
 
-    for (let i = 0; i < ship; i++ {
+    for (let i = 0; i < ship.length; i++) {
         if (isHorizontal) {
-            shipBlocks.push(allBoardBlocks[Number(validStart) + 1]);    
+            shipBlocks.push(allBoardBlocks[validStart + i]);
         } else {
-            shipBlocks.push(allBoardBlocks[Number(validStart) + i + width]);
+            shipBlocks.push(allBoardBlocks[validStart + i * width]);
         }
     }
 
-    let valid = true
+    let valid = true;
 
     if (isHorizontal) {
-        shipBlocks.every((_shipBlock, index) =>
-            valid = shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
+        valid = shipBlocks.every((block, index) => 
+            block.id % width !== width - (shipBlocks.length - (index + 1))
+        );
     } else {
-            valid =  shipBlocks.every((_shipBlock, index) =>
-                 shipBlocks[0].id < 90 + (width * index + 1)
-            )
+        valid = shipBlocks.every((block, index) =>
+            block.id < width * (width - shipBlocks.length + 1) + width * index + 1
+        );
     }
 
-    const notTaken = shipBlocks.every(shipBlock => !shipBlock.classList.contains('taken'));
+    const notTaken = shipBlocks.every(block => !block.classList.contains('taken'));
 
-    if (valid & notTaken) {
-        shipBlocks.forEach(shipBlock => {
-            shipBlock.classList.add('ship.name');
-            shipBlock.classList.add('taken');
-        })
+    if (valid && notTaken) {
+        shipBlocks.forEach(block => {
+            block.classList.add('ship-' + ship.name); // Added '-' to create unique class names for ships
+            block.classList.add('taken');
+        });
     } else {
         addShipPiece(ship);
     }
-    
+}
 
 ships.forEach(ship => addShipPiece(ship));
 
-
 let draggedShip;
 const optionShips = Array.from(optionContainer.children);
-optionShips.forEach(optionShip => optionship.addEventListener('dragstart', dragStart));
+optionShips.forEach(optionShip => optionShip.addEventListener('dragstart', dragStart));
 
-const allPlayerBlocks = document.querySelectorAll('#player div'));
+const allPlayerBlocks = document.querySelectorAll('#player div');
+allPlayerBlocks.forEach(playerBlock => {
+    playerBlock.addEventListener('dragover', dragOver));
+    playerBlock.addEventListener('drop', dropShip);
+});
+
 
 function dragStart(e) {
-    draggedShip = (e.target);
+    draggedShip = e.target;
 }
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dropShip(e) {  
+    const startId = eTarget.id;
+    const ship = ships[draggedShip.id];
+    addShipPiece(ship, startId);
+}
+
+
+
 
