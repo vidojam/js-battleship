@@ -49,14 +49,10 @@ const battleship = new Ship('battleship', 4);
 const carrier = new Ship('carrier', 5);
 
 const ships = [destroyer, submarine, cruiser, battleship, carrier];
+let notDropped
 
-function addShipPiece(ship, startId) {
-    const allBoardBlocks = document.querySelectorAll('#computer div');
-    let randomBoolean = Math.random() < 0.5;
-    let isHorizontal = randomBoolean;
-    let randomStartIndex = Math.floor(Math.random() * width * width);
-    
-    let validStart = isHorizontal ? 
+function gamesBoardContainerValidity(allBoardBlocks, ship, isHorizontal, randomStartIndex) {
+let validStart = isHorizontal ? 
         (randomStartIndex <= width * width - ship.length ? randomStartIndex : width * width - ship.length) :
         (randomStartIndex <= width * width - ship.length * width ? randomStartIndex : randomStartIndex - ship.length * width + width);
 
@@ -84,6 +80,19 @@ function addShipPiece(ship, startId) {
 
     const notTaken = shipBlocks.every(block => !block.classList.contains('taken'));
 
+    return { valid, notTaken, shipBlocks };
+
+}
+
+function addShipPiece(user, ship, startId) {
+    const allBoardBlocks = document.querySelectorAll(`#${user} div`);
+    let randomBoolean = Math.random() < 0.5;
+    let isHorizontal = randomBoolean;
+    let randomStartIndex = Math.floor(Math.random() * width * width);
+    
+    
+   const {shipBlocks, valid, nottaken} = getValidity(allBoardBlocks, ship, isHorizontal, randomStartIndex)
+
     if (valid && notTaken) {
         shipBlocks.forEach(block => {
             block.classList.add('ship-' + ship.name); // Added '-' to create unique class names for ships
@@ -94,7 +103,7 @@ function addShipPiece(ship, startId) {
     }
 }
 
-ships.forEach(ship => addShipPiece(ship));
+ships.forEach(ship => addShipPiece('computer', ship));
 
 let draggedShip;
 const optionShips = Array.from(optionContainer.children);
@@ -118,9 +127,17 @@ function dragOver(e) {
 function dropShip(e) {  
     const startId = eTarget.id;
     const ship = ships[draggedShip.id];
-    addShipPiece(ship, startId);
+    addShipPiece('player' ship, startId);
+    if (!notDropped) {
+        draggedShip.remove();
+    }
 }
 
+// add hightlight
+function highlightArea() {
+    allBoardBlocks = document.querySelectorAll(`#player div`)
+    let isHorizontal = angle === 0;
+}
 
 
 
