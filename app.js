@@ -1,6 +1,9 @@
 const gamesBoardContainer = document.querySelector('#gamesboard-container');
 const optionContainer = document.querySelector('.option-container');
 const flipButton = document.querySelector('#flip-button'); // Ensure this button exists in HTML
+const startButton = document.querySelector('#start-button'); // Ensure this button exists in HTML
+const infoDisplay = document.querySelector('#info'); // Ensure this element exists in HTML
+const turnDisplay = document.querySelector('#turn'); // Ensure this element exists in HTML
 
 let angle = 0;
 
@@ -145,5 +148,36 @@ function highlightArea(startIndex, ship) {
     }
 }
 
+
+let gameOver = false;
+let playerTurn
+
+// Function to start the game
+function startGame() {
+    if optionContainer.children.length ! = 0 {
+        infoDisplay.textContent = 'Please place all your pieces first';
+    } else {
+        const allBoardBlocks = document.querySelectorAll('#computer div');
+        allBoardBlocks.forEach(block => block.addEventListener('click', handleClick));
+    }
+
+}
+
+fucntion handleClick(e) {
+    if(!gameOver) {
+        if(e.target.classList.contains('taken') || e.target.classList.contains('miss')) {
+           e.target.classList.add('boom'); 
+           infoDisplay.textContent = 'You hit this computers ship!';
+           
+           let classes = Array.from (e.target.classList);
+           classes = classes.filter(className => className !== 'block');
+           classes = classes.filter(className => className !== 'boom');
+           classes = classes.filter(className => className !== 'taken);
+           
+        }
+    }
+}
+
+startButton.addEventListener('click', startGame); // Add event listener to the button
 
 
