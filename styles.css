@@ -1,9 +1,7 @@
-
 #gamesboard-container {
     width: 500px;
     display: flex;
     justify-content: space-between;
-
 }
 
 .game-board {
@@ -16,11 +14,7 @@
 .block {
     width: 20px;
     height: 20px;
-   
-
 }
-    
-
 
 .option-container {
     width: 500px;
@@ -31,23 +25,23 @@
 }
 
 .submarine {
-    background-color:green;
+    background-color: green;
 }
 
 .destroyer {
-    background-color:brown;
+    background-color: brown;
 }
 
 .cruiser {
-    background-color:purple;
+    background-color: purple;
 }
 
 .battleship {
-    background-color:orange;
+    background-color: orange;
 }
 
 .carrier {
-    background-color:blue;
+    background-color: blue;
 }
 
 .destroyer-preview {
@@ -80,3 +74,14 @@
     margin: 3px;
 }
 
+.hover {
+    background-color: gray;
+}
+
+.boom {
+    background-color: red;
+}
+
+.empty {
+    background-color: gray;
+}
