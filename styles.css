@@ -9,11 +9,13 @@
     height: 200px;
     display: flex;
     flex-wrap: wrap;
+    border: 1px solid black; /* Optional, for visual clarity */
 }
 
 .block {
     width: 20px;
     height: 20px;
+    box-sizing: border-box; /* Ensure border/padding is included in the width/height */
 }
 
 .option-container {
@@ -22,6 +24,11 @@
     background-color: yellow;
     display: flex;
     align-items: center;
+    justify-content: space-around; /* Center items horizontally */
+}
+
+.submarine, .destroyer, .cruiser, .battleship, .carrier {
+    /* These classes are for the ship types in the option container */
 }
 
 .submarine {
@@ -85,3 +92,9 @@
 .empty {
     background-color: gray;
 }
+
+.taken {
+    /* Define styles for blocks that have been taken */
+    opacity: 0.5; /* Optional: makes taken blocks semi-transparent */
+}
+
