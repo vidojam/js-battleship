@@ -153,13 +153,21 @@ let playerTurn;
 
 // Function to start the game
 function startGame() {
-    if (optionContainer.children.length !== 0) { // Fixed syntax error
+    if (playerTurn === undefined) {
+      if (optionContainer.children.length !== 0) { // Fixed syntax error
         infoDisplay.textContent = 'Please place all your pieces first';
     } else {
         const allBoardBlocks = document.querySelectorAll('#computer div');
         allBoardBlocks.forEach(block => block.addEventListener('click', handleClick));
+        playerTurn = true;
+        turnDisplay.textContent = 'Your Go';
+        infoDisplay.textContent = 'The game has started.'; 
     }
+ 
+   }   
 }
+
+startButton.addEventListener('click', startGame);
 
 let playerHits = [];
 let computerHits = [];
@@ -230,11 +238,13 @@ function checkScore(user, userHits, userSunkenShips) { // Fixed function name an
         if (
             userHits.filter(storedShipName => storedShipName === shipName).length === shipLength
         ) {
-             infoDisplay.textContent = `You sunk the ${user}'s ${shipName}!`; // Fixed backticks
+             
             if (user === 'player') {
+            infoDisplay.textContent = `You sunk the computers ${shipName}!`; // Fixed backticks
                 playerHits = userHits.filter(storedShipName => storedShipName !== shipName);
             }
             if (user === 'computer') {
+                infoDisplay.textContent = `The computer sunk your  ${shipName}!`; // Fixed backticks
                 computerHits = userHits.filter(storedShipName => storedShipName !== shipName);
             }
             userSunkenShips.push(shipName);
@@ -249,5 +259,14 @@ function checkScore(user, userHits, userSunkenShips) { // Fixed function name an
 
 console.log(playerHits);
 console.log(playerSunkenShips);
+
+if (playerSunkenShips.length === 5) {
+    infoDisplay.textContent = 'You sunk all the computers ships. You won!';
+    gameOver = true;
+}
+if (computerSunkenShips.length === 5) {
+    infoDisplay.textContent = 'The computer has sunk all your ships. You Lost!';
+    gameOver = true;
+}
 
 
